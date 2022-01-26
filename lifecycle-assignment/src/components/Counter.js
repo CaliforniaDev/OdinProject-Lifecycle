@@ -21,6 +21,15 @@ class Counter extends React.Component {
       counter: prevState.counter - 1
     }))
   }
+  componentDidMount() {
+    console.log('Component Did Mount');
+    console.log('---------------------')
+
+  }
+  componentDidUpdate(prevProp, prevState, snapshot) {
+    console.log('Component Did Update');
+    console.log('-----------------------')
+  }
   render() {
     console.log('render');
     const { counter } = this.state
