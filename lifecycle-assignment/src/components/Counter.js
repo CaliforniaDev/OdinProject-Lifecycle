@@ -3,8 +3,9 @@ import React from 'react';
 class Counter extends React.Component {
   constructor(props) {
     super(props);
+    const { ignoreProp } = props;
+    console.log(ignoreProp);
     console.log('Contructor');
- 
     this.state= {
       counter: 0,
     }
@@ -29,6 +30,19 @@ class Counter extends React.Component {
   componentDidUpdate(prevProp, prevState, snapshot) {
     console.log('Component Did Update');
     console.log('-----------------------')
+  }
+  componentWillUnmount() {
+    console.log('Component Will Unmount');
+    console.log('------------------------')
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.ignoreProp &&
+      this.props.ignoreProp !== nextProps.ignoreProp ) {
+        console.log("Should Component Update - DO NOT RENDER");
+        return false;
+      } 
+      console.log("Should Component Update - SHOULD RENDER");
+      return true;
   }
   render() {
     console.log('render');
