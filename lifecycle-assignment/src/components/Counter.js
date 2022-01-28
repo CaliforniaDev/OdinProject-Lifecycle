@@ -9,6 +9,8 @@ class Counter extends React.Component {
     console.log('Contructor');
     this.state = {
       counter: 0,
+      seed: 0,
+      initializing: true
     }
   }
 
@@ -26,7 +28,7 @@ class Counter extends React.Component {
   }
 
   isThereAnError = () => {
-    if(this.state.error) return true;
+    if(this.props.showErrorComponent && this.state.error) return true;
     return false;
   }
 
@@ -40,6 +42,9 @@ class Counter extends React.Component {
   }
   componentDidMount() {
     console.log('Component Did Mount');
+    setTimeout(() => {
+      this.setState({initializing: false})
+    }, 500);
     console.log('---------------------');
   }
 
@@ -62,6 +67,7 @@ class Counter extends React.Component {
 
   render() {
     const { counter } = this.state;
+    if (this.state.initializing) return <div><h1>Initializing</h1></div>
     if (this.isThereAnError()) return <ErrorMessage error={this.state.error} />
 
     return (
@@ -71,7 +77,7 @@ class Counter extends React.Component {
         <div className="counter">
           <h1>Counter: {counter}</h1>
         </div>
-        <ErrorComponent />
+        {this.props.showErrorComponent ? <ErrorComponent /> : null}
       </div>
     )
   }
