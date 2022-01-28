@@ -8,9 +8,11 @@ class App extends React.Component {
     this.mountCounter = this.mountCounter.bind(this);
     this.unmountCounter = this.unmountCounter.bind(this);
     this.ignoreProp = this.ignoreProp.bind(this);
+    this.seedGenerator = this.seedGenerator.bind(this);
     this.state = {
       isMount: true,
-      ignoreProp: 0
+      ignoreProp: 0,
+      seed: 40,
     }
   }
   mountCounter() {
@@ -32,22 +34,27 @@ class App extends React.Component {
       ignoreProp: Math.random()
     }))
   }
-  componentDidUpdate() {
-    console.log(this.state)
+  seedGenerator() {
+    this.setState(prevState => ({
+      ...prevState,
+      seed: Number.parseInt(Math.random() * 100)
+    }))
   }
   render() {
-    const { isMount, ignoreProp } = this.state;
+    const { isMount, ignoreProp, seed } = this.state;
 
     return (
       <div>
         {isMount ? 
         <Counter
           ignoreProp={ignoreProp}
+          seed={seed}
         /> 
         : null}
         <button disabled={isMount} onClick={this.mountCounter}>Mount</button>
         <button disabled={!isMount}onClick={this.unmountCounter}>Unmount</button>
         <button onClick={this.ignoreProp}>Ignore Prop</button>
+        <button onClick={this.seedGenerator}>Seed Generator</button>
       </div>
     )
   }
