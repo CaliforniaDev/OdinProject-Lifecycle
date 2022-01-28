@@ -1,15 +1,17 @@
 import React from 'react';
 
+
 class Counter extends React.Component {
   constructor(props) {
     super(props);
     const { ignoreProp } = props;
     console.log(ignoreProp);
     console.log('Contructor');
-    this.state= {
+    this.state = {
       counter: 0,
     }
   }
+
   increment = () => {
     this.setState(prevState => ({
       ...prevState,
@@ -22,10 +24,56 @@ class Counter extends React.Component {
       counter: prevState.counter - 1
     }))
   }
+
+  isThereAnError = () => {
+    if(this.state.error) return true;
+    return false;
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.seed && state.seed !== props.seed)
+      return {
+        seed: props.seed,
+        counter: props.seed
+      }
+    return null;
+  }
   componentDidMount() {
     console.log('Component Did Mount');
-    console.log('---------------------')
+    console.log('---------------------');
+  }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.ignoreProp &&
+      this.props.ignoreProp !== nextProps.ignoreProp) {
+      console.log("Should Component Update - DO NOT RENDER");
+      console.log('-----------------------')
+      return false;
+    }
+
+    console.log("Should Component Update - SHOULD RENDER");
+    console.log('-----------------------')
+    return true;
+  }
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    console.log('Get Snapshot Before Update');
+    return null;
+  }
+
+  render() {
+    const { counter } = this.state;
+    if (this.isThereAnError()) return <ErrorMessage error={this.state.error} />
+
+    return (
+      <div>
+        <button onClick={this.increment}>INCREMENT</button>
+        <button onClick={this.decrement}>DECREMENT</button>
+        <div className="counter">
+          <h1>Counter: {counter}</h1>
+        </div>
+        <ErrorComponent />
+      </div>
+    )
   }
   componentDidUpdate(prevProp, prevState, snapshot) {
     console.log('Component Did Update');
@@ -35,25 +83,21 @@ class Counter extends React.Component {
     console.log('Component Will Unmount');
     console.log('------------------------')
   }
-  shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.ignoreProp &&
-      this.props.ignoreProp !== nextProps.ignoreProp ) {
-        console.log("Should Component Update - DO NOT RENDER");
-        return false;
-      } 
-      console.log("Should Component Update - SHOULD RENDER");
-      return true;
+  componentDidCatch(error, info) {
+    console.log("Component Did Catch");
+    console.log("----------------------")
+    this.setState({ error, info });
+  
   }
-  render() {
-    console.log('render');
-    const { counter } = this.state
-    return (
-      <div className="counter">
-        <h1>Counter: {counter}</h1>
-        <button onClick={this.increment}>INCREMENT</button>
-        <button onClick={this.decrement}>DECREMENT</button>
-      </div>
-    )
-  }
+}
+
+const ErrorComponent = () => <div>{props.ignore}</div>
+
+const ErrorMessage = ({ error }) => {
+  return (
+    <div>
+      <h2>We have encountered an error! {error.message} </h2>
+    </div>
+  )
 }
 export default Counter;
