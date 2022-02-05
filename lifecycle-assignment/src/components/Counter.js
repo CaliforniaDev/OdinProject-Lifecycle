@@ -38,11 +38,12 @@ class Counter extends React.Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (props.seed && state.seed !== props.seed)
+    if (props.seed && state.seed !== props.seed) {
       return {
         seed: props.seed,
         counter: props.seed
       }
+    }
     return null;
   }
   componentDidMount() {
