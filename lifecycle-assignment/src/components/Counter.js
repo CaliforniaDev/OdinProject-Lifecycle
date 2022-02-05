@@ -21,14 +21,19 @@ class Counter extends React.Component {
     }));
   }
   decrement = () => {
-    this.setState(prevState => ({
-      ...prevState,
-      counter: prevState.counter - 1
-    }))
+    this.setState((prevState, props) => {
+      console.log(prevState);
+      console.log(props);
+      return {
+        ...prevState,
+        counter: prevState.counter - 1,
+        test: props
+      }
+    })
   }
 
   isThereAnError = () => {
-    if(this.props.showErrorComponent && this.state.error) return true;
+    if (this.props.showErrorComponent && this.state.error) return true;
     return false;
   }
 
@@ -43,7 +48,7 @@ class Counter extends React.Component {
   componentDidMount() {
     console.log('Component Did Mount');
     setTimeout(() => {
-      this.setState({initializing: false})
+      this.setState({ initializing: false })
     }, 500);
     console.log('---------------------');
   }
@@ -93,7 +98,7 @@ class Counter extends React.Component {
     console.log("Component Did Catch");
     console.log("----------------------")
     this.setState({ error, info });
-  
+
   }
 }
 
